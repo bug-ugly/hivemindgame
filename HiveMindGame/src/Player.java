@@ -8,7 +8,7 @@ import processing.core.PVector;
 public class Player extends GameObject {
 	DeepQNetwork RLNet; // neural net
 	// variable for nn initialisation
-	int replayMemoryCapacity = 20; // how many replays can be stored in the memory
+	int replayMemoryCapacity = 12; // how many replays can be stored in the memory
 	float discount = .99f; // discount
 	double epsilon = 1d; // exploration rate
 	int batchSize = 12; // how many replays are processed at a time
@@ -33,7 +33,7 @@ public class Player extends GameObject {
 	 
 	Player(HiveMind p, int _x, int _y) {
 		parent = p;
-		pos = new PVector(_x, _y);
+		pos = new PVector(_x, _y,0);
 
 		lastOutputs = new ArrayList<float[]>();
 

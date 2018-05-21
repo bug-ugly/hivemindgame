@@ -73,8 +73,8 @@ class Ear {
 
 	float[] getClosestFrequency() {
 		float value = (float) 0.01;
-		float posX = 1000; 
-		float posY = 1000;
+		float posX = currentObj.pos.x; 
+		float posY = currentObj.pos.y;
 		readSound();
 		for ( int i = 0; i< positionsX.length; i++) {
 			for(int j = 0; j<positionsX[i].length; j++) {

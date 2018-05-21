@@ -27,8 +27,8 @@ public class HiveMind extends PApplet {
 	}
 
 	public void settings() {
-		size(1280, 720);
-
+		size(1280, 720, P3D);
+	
 	}
 
 	public void setup() {
@@ -41,6 +41,8 @@ public class HiveMind extends PApplet {
 		hud = new Hud(this);
 		swipeController = new Swiper(this);
 		game = new GameLoop(this);
+
+
 	}
 
 	public void draw() {

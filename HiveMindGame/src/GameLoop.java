@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 //game loop takes care of all the game objects, making sure they are updated and rendered every frame, it also manages dead objects
 public class GameLoop {
-	int objectsTimer;
 	
 	HiveMind parent;
 	ArrayList <GameObject> gameObjects; //list of all game objects
@@ -22,27 +21,29 @@ public class GameLoop {
 	
 	//separating update and render cycles in order to avoid unpredictable visual artifacts and preserve frame rate
 	void update() {
-		objectsTimer ++ ;
-		if ( objectsTimer > 100) {
+
 			for(int i = 0; i < gameObjects.size(); i++) {
-				if ( gameObjects.get(i) instanceof WorldObject) {
+				if ( gameObjects.get(i) instanceof WorldObject && gameObjects.get(i).pos.z > 400) {
 					gameObjects.get(i).dead = true;
 					
 				}
 			}
 			
 
-			objectsTimer = 0;
-		}
+		
 		clearDead();
 		counter = 0;
-		for (GameObject g : gameObjects) {
+		for (int i = 0; i<gameObjects.size(); i++) {
+			GameObject g = gameObjects.get(i);
 			g.update();
 			if ( g instanceof WorldObject) {
 				counter ++ ;
 			}
 		}
 		if (counter < 1) {
+			
+			float rPosX; 
+			float rPosY;
 			float rand = parent.random(0,10);
 				if (rand > 5) {
 					gameObjects.add(new WorldObject(parent,  parent.random(parent.width/2-50, parent.width/2+50),parent.random(parent.height/2-50, parent.height/2+50),true));

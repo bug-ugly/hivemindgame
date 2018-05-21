@@ -23,7 +23,7 @@ public class Particle extends GameObject {
 	
 	Particle(HiveMind p, float x, float y) {
 		parent = p;
-		pos = new PVector(x, y);
+		pos = new PVector(x, y,0);
 		diameter = 5;
 		layers = new int[] {3,20,16,3};
 		net = new NeuralNetwork(layers,(float) 0.001,parent);
@@ -33,8 +33,12 @@ public class Particle extends GameObject {
 		ear = new Ear(this, parent, 30);
 	}
 	Particle(HiveMind p, float x, float y, NeuralNetwork _n) {
-		net.setParams(_n);
 		parent = p;
+		layers = new int[] {3,20,16,3};
+		net = new NeuralNetwork(layers,_n,(float)0.001,parent);
+		if(parent.random(0,1)>0.7) {
+		net.Mutate();
+		}
 		pos = new PVector(x, y);
 		diameter = 5;
 		collidable = true;
@@ -57,6 +61,16 @@ public class Particle extends GameObject {
 		
 		direction = PApplet.atan2(getPlayer().pos.y - pos.y, getPlayer().pos.x - pos.x);
 
+		if (checkCollision() instanceof WorldObject) {
+			if (checkCollision().good == true) {
+				split();
+			} else {
+				explode();
+			}
+			checkCollision().dead = true;
+			
+		}
+		
 		if (checkCollision() != null) {
 			if (checkCollision().pos.x == pos.x && checkCollision().pos.y == pos.y) {
 				direction = parent.random(PConstants.PI * 2);
@@ -66,15 +80,7 @@ public class Particle extends GameObject {
 			}
 
 		}
-		if (checkCollision() instanceof WorldObject) {
-			if (checkCollision().good) {
-				split();
-			} else {
-				explode();
-			}
-			checkCollision().dead = true;
-			
-		}
+		
 
 		float newX = PApplet.cos(direction) * speed + pos.x;
 		float newY = PApplet.sin(direction) * speed + pos.y;
@@ -99,7 +105,8 @@ public class Particle extends GameObject {
 	}
 	
 	void split() {
-		for(int i = 0; i< 5; i++) {
+		//parent.println("beep");
+		for(int i = 0; i< 2; i++) {
 		parent.game.gameObjects.add(new Particle(parent,pos.x,pos.y,net));
 		}
 	}
@@ -140,23 +147,27 @@ public class Particle extends GameObject {
 			}
 		}
 		
+		
 		float angle = PApplet.atan2(pY - pos.y, pX - pos.x);
+		if ( pX == pos.x && pY == pos.y) {
+				angle = angle + parent.random(PConstants.PI);
+				}
 		switch(num) {
 		case 0: 
 			//avoid
 			
 			
 			pos.set(
-					 (float)(PApplet.cos(angle + PConstants.PI) * speed/1.4 + pos.x), 
-					 (float)(PApplet.sin(angle + PConstants.PI) * speed/1.4 + pos.y)
+					 (float)(PApplet.cos(angle + PConstants.PI) * speed + pos.x), 
+					 (float)(PApplet.sin(angle + PConstants.PI) * speed + pos.y)
 					);
 			break; 
 		case 1: 
 			//follow
 			 
 			pos.set(
-					(float)(PApplet.cos(angle) * speed/1.4 + pos.x), 
-					(float)(PApplet.sin(angle) * speed/1.4 + pos.y)
+					(float)(PApplet.cos(angle) * speed + pos.x), 
+					(float)(PApplet.sin(angle) * speed + pos.y)
 					);
 			break; 
 		

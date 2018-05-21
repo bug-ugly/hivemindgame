@@ -1,19 +1,22 @@
 import ddf.minim.ugens.Oscil;
 import ddf.minim.ugens.Waves;
+import processing.core.PConstants;
+import processing.core.PShape;
 import processing.core.PVector;
 
 public class WorldObject extends GameObject{
+	
+
 	
 	int soundInterval;
 	int intervalCounter = 0;
 	int soundCounter = 0;
 	int soundTimer = 1;
-	
-	boolean good;
+
 
 	WorldObject(HiveMind p, float f, float g, boolean _good){
 		parent = p; 
-		pos = new PVector(f, g);
+		pos = new PVector(f, g,-500);
 		good = _good;
 		out = parent.minim.getLineOut();
 		diameter = 20;
@@ -29,10 +32,13 @@ public class WorldObject extends GameObject{
 	    soundInterval = 5;
 	    
 	    collidable = true;
+	   
 	}
 	
 	void update() {
 		super.update();
+		pos.z = pos.z + 10;
+		
 		 intervalCounter ++; 
 		    if ( intervalCounter > soundInterval){
 		     triggerNoise = true;
@@ -60,8 +66,13 @@ public class WorldObject extends GameObject{
 			parent.fill(255,0,0);
 		}
 		
+		
+		parent.pushMatrix();
+		
+		//parent.translate(0,0,pos.z);
 		parent.ellipse(pos.x,pos.y, diameter,diameter);
 		
+		parent.popMatrix();
 	}
 	
 
