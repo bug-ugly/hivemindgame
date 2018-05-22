@@ -73,6 +73,12 @@ public class WorldObject extends GameObject{
 		parent.ellipse(pos.x,pos.y, diameter,diameter);
 		
 		parent.popMatrix();
+		
+		if (soundPlaying) {
+			parent.stroke(1);
+			parent.noFill();
+			parent.ellipse(pos.x,pos.y,diameter+5,diameter+5);
+		}
 	}
 	
 

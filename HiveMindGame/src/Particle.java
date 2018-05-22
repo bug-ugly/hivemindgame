@@ -7,20 +7,17 @@ public class Particle extends GameObject {
 	public int particleSize = 5;
 	float direction;
 	float speed;
-	float clusterRange = 100;
-	float particleRange = 100;
+	//float clusterRange = 100;
+	//float particleRange = 100;
 	String[] actions;
 	float explosionRange = 10;
 	NeuralNetwork net; 
 	int [] layers;
 	
-	float lookDirection = 0;
-	float sensorData = (float) 0.1; 
-	float sensorDist = 50;
-	
 	float pX; 
 	float pY;
 	
+	float [] earFreq;
 	Particle(HiveMind p, float x, float y) {
 		parent = p;
 		pos = new PVector(x, y,0);
@@ -29,8 +26,8 @@ public class Particle extends GameObject {
 		net = new NeuralNetwork(layers,(float) 0.001,parent);
 		collidable = true;
 		speed = 1;
-		hearingRange = 100;
-		ear = new Ear(this, parent, 30);
+		hearingRange = 200;
+		ear = new Ear(this, parent);
 	}
 	Particle(HiveMind p, float x, float y, NeuralNetwork _n) {
 		parent = p;
@@ -44,7 +41,7 @@ public class Particle extends GameObject {
 		collidable = true;
 		speed = 1;
 		hearingRange = 100;
-		ear = new Ear(this, parent, 30);
+		ear = new Ear(this, parent);
 	}
 
 	void update() {
@@ -52,7 +49,10 @@ public class Particle extends GameObject {
 		
 		collisionStuff();
 		
-		act (net.FeedForward (getSensorData()));
+		earFreq = ear.getClosestFrequency();
+		if(earFreq != null) {
+			act (net.FeedForward (getSensorData()));
+		}
 	
 	}
 	
@@ -94,9 +94,9 @@ public class Particle extends GameObject {
 		float [] data;
 		
 		//getting the closest frequency from the ear table 
-		float freq = ear.getClosestFrequency()[0];
-		pX = ear.getClosestFrequency()[1];
-		pY = ear.getClosestFrequency()[2];
+		float freq = earFreq[0];
+		pX = earFreq[1];
+		pY = earFreq[2];
 		float tdistX = pX - pos.x; 
 		float tdistY = pY - pos.y;
 		

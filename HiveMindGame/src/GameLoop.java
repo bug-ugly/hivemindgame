@@ -12,7 +12,7 @@ public class GameLoop {
 		gameObjects = new ArrayList <GameObject>();
 		
 		gameObjects.add(new Player(parent, parent.width/2, parent.height/2));
-		for ( int i = 0; i< 100; i++) {
+		for ( int i = 0; i< 200; i++) {
 			gameObjects.add(new Particle(parent,parent.width/2, parent.height/2));
 		}
 		

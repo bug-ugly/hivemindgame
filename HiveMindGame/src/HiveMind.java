@@ -27,7 +27,7 @@ public class HiveMind extends PApplet {
 	}
 
 	public void settings() {
-		size(1280, 720, P3D);
+		size(1280, 720, P2D);
 	
 	}
 
