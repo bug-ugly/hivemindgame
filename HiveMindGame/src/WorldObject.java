@@ -1,22 +1,20 @@
 import ddf.minim.ugens.Oscil;
 import ddf.minim.ugens.Waves;
-import processing.core.PConstants;
-import processing.core.PShape;
+import processing.core.PApplet;
 import processing.core.PVector;
 
 public class WorldObject extends GameObject{
-	
-
 	
 	int soundInterval;
 	int intervalCounter = 0;
 	int soundCounter = 0;
 	int soundTimer = 1;
-
+	int growthTimer;
+	int fullGrownTime = 500;
 
 	WorldObject(HiveMind p, float f, float g, boolean _good){
 		parent = p; 
-		pos = new PVector(f, g,-500);
+		pos = new PVector(f, g, 0);
 		good = _good;
 		out = parent.minim.getLineOut();
 		diameter = 20;
@@ -32,13 +30,26 @@ public class WorldObject extends GameObject{
 	    soundInterval = 5;
 	    
 	    collidable = true;
-	   
+	    growthTimer = 0;
+	    
 	}
 	
 	void update() {
 		super.update();
-		pos.z = pos.z + 10;
 		
+		if(pos.z == 1) {
+			producingSound();
+		}
+		
+		if(growthTimer>=fullGrownTime) {
+		pos.z = 1;
+		
+		}else {
+			growthTimer ++; 
+		}
+	}
+	
+	void producingSound() {
 		 intervalCounter ++; 
 		    if ( intervalCounter > soundInterval){
 		     triggerNoise = true;
@@ -59,6 +70,12 @@ public class WorldObject extends GameObject{
 	
 	void render() {
 		super.render();
+		
+		if(pos.z == 0) {
+			parent.stroke(1);
+			parent.noFill();
+	}else {
+		parent.noStroke();
 		if ( good) {
 			parent.fill (0,0,255);
 		}
@@ -66,14 +83,11 @@ public class WorldObject extends GameObject{
 			parent.fill(255,0,0);
 		}
 		
+	}
+
+		parent.ellipse(pos.x,pos.y, PApplet.map(growthTimer, 0,fullGrownTime, 1,diameter),PApplet.map(growthTimer, 0,fullGrownTime, 1,diameter));
 		
-		parent.pushMatrix();
-		
-		//parent.translate(0,0,pos.z);
-		parent.ellipse(pos.x,pos.y, diameter,diameter);
-		
-		parent.popMatrix();
-		
+
 		if (soundPlaying) {
 			parent.stroke(1);
 			parent.noFill();

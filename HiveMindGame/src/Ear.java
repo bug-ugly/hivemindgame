@@ -24,7 +24,7 @@ class Ear {
 		
 		for ( int i = 0; i< parent.game.gameObjects.size(); i++) {
 			GameObject g = parent.game.gameObjects.get(i);
-			if(g instanceof WorldObject && PApplet.dist(g.pos.x,g.pos.y,currentObj.pos.x,currentObj.pos.y)< currentObj.hearingRange && g.soundPlaying) {
+			if(g instanceof WorldObject && PApplet.dist(g.pos.x,g.pos.y,currentObj.pos.x,currentObj.pos.y)< currentObj.hearingRange && g.soundPlaying && g.pos.z == 1) {
 				if(memoryCounter == 0) {
 					pingF = g.wave.frequency.getLastValue();
 					pingX = g.pos.x; 

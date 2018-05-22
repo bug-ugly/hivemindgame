@@ -61,7 +61,7 @@ public class Particle extends GameObject {
 		
 		direction = PApplet.atan2(getPlayer().pos.y - pos.y, getPlayer().pos.x - pos.x);
 
-		if (checkCollision() instanceof WorldObject) {
+		if (checkCollision() instanceof WorldObject && checkCollision().pos.z == 1) {
 			if (checkCollision().good == true) {
 				split();
 			} else {
@@ -122,6 +122,7 @@ public class Particle extends GameObject {
 
 	void render() {
 		super.render();
+		parent.noStroke();
 		parent.ellipse(pos.x, pos.y, diameter, diameter);
 		
 	}

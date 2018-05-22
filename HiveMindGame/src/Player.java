@@ -54,6 +54,7 @@ public class Player extends GameObject {
 	
 	void render() {
 		super.render();
+		parent.noStroke();
 		parent.fill(0);
 		parent.ellipse (pos.x, pos.y, diameter, diameter);
 	}

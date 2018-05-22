@@ -12,26 +12,18 @@ public class GameLoop {
 		gameObjects = new ArrayList <GameObject>();
 		
 		gameObjects.add(new Player(parent, parent.width/2, parent.height/2));
-		for ( int i = 0; i< 200; i++) {
+		for ( int i = 0; i< 100; i++) {
 			gameObjects.add(new Particle(parent,parent.width/2, parent.height/2));
 		}
 		
-		gameObjects.add(new WorldObject(parent, parent.random(parent.width/2-100, parent.width/2+100),parent.random(parent.height/2-100, parent.height/2+100),true));
+		gameObjects.add(new WorldObject(parent, parent.random(parent.width/2-200, parent.width/2+200),parent.random(parent.height/2-200, parent.height/2+200),true));
 	}
 	
 	//separating update and render cycles in order to avoid unpredictable visual artifacts and preserve frame rate
 	void update() {
 
-			for(int i = 0; i < gameObjects.size(); i++) {
-				if ( gameObjects.get(i) instanceof WorldObject && gameObjects.get(i).pos.z > 400) {
-					gameObjects.get(i).dead = true;
-					
-				}
-			}
-			
-
-		
 		clearDead();
+		
 		counter = 0;
 		for (int i = 0; i<gameObjects.size(); i++) {
 			GameObject g = gameObjects.get(i);
@@ -41,9 +33,6 @@ public class GameLoop {
 			}
 		}
 		if (counter < 1) {
-			
-			float rPosX; 
-			float rPosY;
 			float rand = parent.random(0,10);
 				if (rand > 5) {
 					gameObjects.add(new WorldObject(parent,  parent.random(parent.width/2-50, parent.width/2+50),parent.random(parent.height/2-50, parent.height/2+50),true));
@@ -51,7 +40,6 @@ public class GameLoop {
 				else {
 					gameObjects.add(new WorldObject(parent,  parent.random(parent.width/2-50, parent.width/2+50),parent.random(parent.height/2-50, parent.height/2+50),false));
 				}
-			
 			
 		}
 		
