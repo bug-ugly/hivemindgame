@@ -140,6 +140,7 @@ public class Layer {
 		}
 	}
 
+	// various random mutations for the weights
 	public void Mutate() {
 		int randomiser = (int) parent.random(0, 10);
 		if (randomiser == 1) {
@@ -147,7 +148,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = weights[i][j] + parent.random(1);
+						weights[i][j] = weights[i][j] + parent.random(1); // weight + random value
 				}
 			}
 		}
@@ -156,7 +157,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = weights[i][j] * -1;
+						weights[i][j] = weights[i][j] * -1; // weight sign inversion
 				}
 			}
 		}
@@ -166,7 +167,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = weights[i][j] - parent.random(1);
+						weights[i][j] = weights[i][j] - parent.random(1); // weight-random value
 				}
 			}
 		}
@@ -175,7 +176,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = weights[i][j] / 2;
+						weights[i][j] = weights[i][j] / 2; // weight divided in half
 				}
 			}
 		}
@@ -184,7 +185,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = (float) (weights[i][j] - 0.1);
+						weights[i][j] = (float) (weights[i][j] - 0.1); // weight -0.1
 				}
 			}
 		}
@@ -194,7 +195,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = (float) (weights[i][j] + 0.1);
+						weights[i][j] = (float) (weights[i][j] + 0.1); // weight + 0.1
 				}
 			}
 		}
@@ -203,7 +204,7 @@ public class Layer {
 				for (int j = 0; j < numberOfInputs; j++) {
 					float chance = parent.random(1);
 					if (chance > 0.9)
-						weights[i][j] = 0;
+						weights[i][j] = 0; // setting the weight to 0
 				}
 			}
 		}

@@ -1,38 +1,38 @@
 
-
 import ddf.minim.*;
 import processing.core.PApplet;
 import ddf.minim.analysis.FFT;
 import controlP5.*;
 
 public class HiveMind extends PApplet {
-	public Swiper swipeController; 
+	public Swiper swipeController;
 	public ControlP5 cp5;
 	public GameLoop game;
-	
+
 	public Minim minim;
 	public AudioInput in; // sound from mic
 	public FFT fftLin;
 	public Hud hud;
 	
+	public boolean mouseMode=false;
 	
-	
+
 	// minimum sound level of the mic to be perceived by the aliens
 	public float minimum_s_level = (float) 0.09;
 	public boolean rewardsActive = false;
 
 	public static void main(String[] args) {
 		PApplet.main("HiveMind");
-		
+
 	}
 
 	public void settings() {
 		size(1280, 720, P2D);
-	
+
 	}
 
 	public void setup() {
-		
+		smooth();
 		cp5 = new ControlP5(this);
 		minim = new Minim(this);
 		in = minim.getLineIn(); // mic
@@ -42,7 +42,6 @@ public class HiveMind extends PApplet {
 		swipeController = new Swiper(this);
 		game = new GameLoop(this);
 
-
 	}
 
 	public void draw() {
@@ -51,18 +50,28 @@ public class HiveMind extends PApplet {
 		game.render();
 		hud.update();
 		swipeController.update();
-		
+
 	}
-	
 
 	public void mouseDragged() {
-		if (mouseY < height - 70) { // only register swipe event when not intercepting the levels control bar
+		if (mouseY < height - 70) { // only register swipe event when outside the area of the levels control bar
 			swipeController.swipeEvent();
 		}
 	}
 
 	public void mouseReleased() {
 		swipeController.swipeFinished();
+	}
+	
+	public void keyPressed() {
+		if(key == 'M' || key == 'm') {
+			if(mouseMode == false) {
+			mouseMode = true;
+			}
+			else {
+				mouseMode = false;
+			}
+		}
 	}
 
 	float[] getaRow(float[][] array, int i) {

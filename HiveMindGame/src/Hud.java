@@ -17,6 +17,7 @@ class Hud {
 
 	void update() {
 		showMicSoundLevels();
+		
 	}
 
 	// control the sensitivity of the microphone in order to remove the unnecessary
@@ -41,6 +42,7 @@ class Hud {
 		// text ( "levels: " + current_level,levelsX, levelsY + 30);
 	}
 
+	
 	void createSoundLevelControl() {
 		parent.cp5.addSlider("minimum_s_level").setPosition(levelsX, levelsY).setRange(0, 1).setWidth(levelsWidth);
 

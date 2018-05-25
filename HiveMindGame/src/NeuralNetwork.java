@@ -1,5 +1,4 @@
 
-
 //a neural network component of DeepQ net 
 class NeuralNetwork {
 	HiveMind parent;

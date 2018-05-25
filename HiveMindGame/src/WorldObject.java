@@ -3,99 +3,147 @@ import ddf.minim.ugens.Waves;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class WorldObject extends GameObject{
+//objects that can be picked up
+public class WorldObject extends GameObject {
+
+	final float EXPLOSION_RANGE = 50; // range at which other particles get wiped out on explosion
 	
-	int soundInterval;
+	int soundInterval = 20;
+	int growthTimer;
 	int intervalCounter = 0;
 	int soundCounter = 0;
-	int soundTimer = 1;
-	int growthTimer;
-	int fullGrownTime = 500;
-
-	WorldObject(HiveMind p, float f, float g, boolean _good){
-		parent = p; 
-		pos = new PVector(f, g, 0);
-		good = _good;
-		out = parent.minim.getLineOut();
-		diameter = 20;
-		float freq; 
-		if ( good) {
-			freq = 150;
-		}
-		else {
-			freq = 400;
-		}
-	    // create a sine wave Oscil, set to 440 Hz, at 0.5 amplitude
-	    wave = new Oscil( freq, 0.5f, Waves.SINE );
-	    soundInterval = 5;
-	    
-	    collidable = true;
-	    growthTimer = 0;
-	    
-	}
 	
+	int INNER_DIAMETER = 20;
+	int OUTER_DIAMETER = 50;
+	String type; 
+	
+	final int SOUND_TIMER = 2; // how long one sound lasts
+	final int FULL_GROWN_TIME = 500; // time at which the object becomes fully grown
+
+	WorldObject(HiveMind p, float f, float g, String _type) {
+		parent = p;
+		pos = new PVector(f, g, 0); //when z becomes 1, its fully grown
+		type = _type;
+		out = parent.minim.getLineOut();
+		diameter = OUTER_DIAMETER;
+		float freq;
+		
+		switch(type) {
+		case "bomb": 
+			freq = 400;
+			break;
+		case "split": 
+			freq = 150;
+			break;
+		default: 
+			freq = 100;
+			break;
+		}
+		
+		// create a sine wave Oscil, set to 440 Hz, at 0.5 amplitude
+		wave = new Oscil(freq, 0.5f, Waves.SINE);
+		collidable = true;
+		growthTimer = 0;
+
+	}
+
 	void update() {
 		super.update();
-		
-		if(pos.z == 1) {
+
+		if (pos.z == 1) {
 			producingSound();
 		}
-		
-		if(growthTimer>=fullGrownTime) {
-		pos.z = 1;
-		
-		}else {
-			growthTimer ++; 
+
+		if (growthTimer >= FULL_GROWN_TIME) {
+			pos.z = 1;
+
+		} else {
+			growthTimer++;
 		}
 	}
 	
-	void producingSound() {
-		 intervalCounter ++; 
-		    if ( intervalCounter > soundInterval){
-		     triggerNoise = true;
-		     intervalCounter = 0; 
-		    }
-		    if (triggerNoise) {
-				produceSound();
-				triggerNoise = false;
-				soundPlaying = true;
-				soundCounter = 0;
-			}
-			soundCounter++;
-			if (soundCounter > soundTimer && soundPlaying) {
-				stopSound();
-				soundPlaying = false;
-			}
+	public void pickUp(GameObject particle) {
+		super.pickUp(particle);
+		switch(type) {
+		case "bomb": 
+			explode();
+			break;
+		case "split":
+			particle.split();
+			break;
+		}
+		
+		
+		die("CONSUMED");
 	}
 	
-	void render() {
-		super.render();
-		
-		if(pos.z == 0) {
-			parent.stroke(1);
-			parent.noFill();
-	}else {
-		parent.noStroke();
-		if ( good) {
-			parent.fill (0,0,255);
+	void explode() {
+		for (int i = 0; i < parent.game.gameObjects.size(); i++) {
+			GameObject g = parent.game.gameObjects.get(i);
+			if (g instanceof Particle && PApplet.dist(g.pos.x, g.pos.y, pos.x, pos.y) < EXPLOSION_RANGE) {
+				g.die("EXPLOSION");
+			}
 		}
-		else {
-			parent.fill(255,0,0);
-		}
-		
 	}
 
-		parent.ellipse(pos.x,pos.y, PApplet.map(growthTimer, 0,fullGrownTime, 1,diameter),PApplet.map(growthTimer, 0,fullGrownTime, 1,diameter));
-		
+	void producingSound() {
+		intervalCounter++;
+		if (intervalCounter > soundInterval) {
+			triggerNoise = true;
+			intervalCounter = 0;
+		}
+		if (triggerNoise) {
+			produceSound();
+			triggerNoise = false;
+			soundPlaying = true;
+			soundCounter = 0;
+		}
+		soundCounter++;
+		if (soundCounter > SOUND_TIMER && soundPlaying) {
+			stopSound();
+			soundPlaying = false;
+		}
+	}
+
+	void render() {
+		super.render();
+
+		if (pos.z == 0) {
+			parent.stroke(1);
+			parent.noFill();
+		} else {
+			parent.stroke(0);
+			parent.noFill();
+			parent.ellipse(pos.x,pos.y,diameter, diameter);
+			
+			parent.noStroke();
+			switch(type) {
+			case "bomb":
+				parent.fill(255,0,0);
+				break; 
+			case "split": 
+				parent.fill(0,0,255);
+				break;
+			}
+			
+		}
+
+		parent.ellipse(pos.x, pos.y, PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, INNER_DIAMETER),
+				PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, INNER_DIAMETER));
 
 		if (soundPlaying) {
 			parent.stroke(1);
 			parent.noFill();
-			parent.ellipse(pos.x,pos.y,diameter+5,diameter+5);
+			parent.ellipse(pos.x, pos.y, INNER_DIAMETER + 5, INNER_DIAMETER + 5);
 		}
 	}
-	
 
+	public void die(String type) {
+		super.die(type);
+		stopSound();
+		dead = true;
+		stopSound();
+	}
 	void produceSound() {
 
 		wave.unpatch(out);

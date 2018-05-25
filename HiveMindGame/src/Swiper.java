@@ -71,7 +71,7 @@ class Swiper {
 	// sending the calculated direction to the player
 	void sendSwipe(String swipe) {
 		HiveMind.println(swipe);
-		//parent.userController.sayDirection(swipe);
+		// parent.userController.sayDirection(swipe);
 		if (parent.rewardsActive) {
 			if (parent.game.gameObjects != null) {
 				for (int i = 0; i < parent.game.gameObjects.size(); i++) {
