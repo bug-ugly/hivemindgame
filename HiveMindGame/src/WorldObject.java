@@ -12,9 +12,8 @@ public class WorldObject extends GameObject {
 	int growthTimer;
 	int intervalCounter = 0;
 	int soundCounter = 0;
-	
-	int INNER_DIAMETER = 20;
-	int OUTER_DIAMETER = 50;
+	float freq;
+	int OUTER_DIAMETER = 20;
 	String type; 
 	
 	final int SOUND_TIMER = 2; // how long one sound lasts
@@ -26,7 +25,7 @@ public class WorldObject extends GameObject {
 		type = _type;
 		out = parent.minim.getLineOut();
 		diameter = OUTER_DIAMETER;
-		float freq;
+		
 		
 		switch(type) {
 		case "bomb": 
@@ -109,10 +108,10 @@ public class WorldObject extends GameObject {
 		super.render();
 
 		if (pos.z == 0) {
-			parent.stroke(1);
+			parent.stroke(255);
 			parent.noFill();
 		} else {
-			parent.stroke(0);
+			parent.stroke(255);
 			parent.noFill();
 			parent.ellipse(pos.x,pos.y,diameter, diameter);
 			
@@ -128,14 +127,9 @@ public class WorldObject extends GameObject {
 			
 		}
 
-		parent.ellipse(pos.x, pos.y, PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, INNER_DIAMETER),
-				PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, INNER_DIAMETER));
+		parent.ellipse(pos.x, pos.y, PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, diameter),
+				PApplet.map(growthTimer, 0, FULL_GROWN_TIME, 1, diameter));
 
-		if (soundPlaying) {
-			parent.stroke(1);
-			parent.noFill();
-			parent.ellipse(pos.x, pos.y, INNER_DIAMETER + 5, INNER_DIAMETER + 5);
-		}
 	}
 
 	public void die(String type) {
@@ -145,7 +139,7 @@ public class WorldObject extends GameObject {
 		stopSound();
 	}
 	void produceSound() {
-
+		parent.game.gameObjects.add(new Fx (pos.x,pos.y,"SOUND", parent, this));
 		wave.unpatch(out);
 		// patch the Oscil to the output
 		wave.patch(out);

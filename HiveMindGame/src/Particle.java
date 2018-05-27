@@ -22,6 +22,8 @@ public class Particle extends GameObject {
 	int[] layers;
 	float[] earFreq;
 	
+	
+	
 	boolean following = false;
 
 	Particle(HiveMind p, float x, float y) {
@@ -34,6 +36,7 @@ public class Particle extends GameObject {
 		speed = PARTICLE_SPEED;
 		hearingRange = PARTICLE_HEARING_RANGE;
 		ear = new Ear(this, parent);
+		
 	}
 
 	Particle(HiveMind p, float x, float y, NeuralNetwork _n) {
@@ -49,6 +52,7 @@ public class Particle extends GameObject {
 		speed = PARTICLE_SPEED;
 		hearingRange = PARTICLE_HEARING_RANGE;
 		ear = new Ear(this, parent);
+		
 	}
 
 	void update() {
@@ -134,7 +138,7 @@ public class Particle extends GameObject {
 		super.die(deathType);
 		switch(deathType){
 		case "EXPLOSION": 
-			parent.game.gameObjects.add(new Fx(pos.x,pos.y, "BLOOD", parent));
+			parent.game.gameObjects.add(new Fx(pos.x,pos.y, "BLOOD", parent,this));
 			break; 
 		}
 		dead = true;
@@ -143,7 +147,7 @@ public class Particle extends GameObject {
 	void render() {
 		super.render();
 		parent.noStroke();
-		parent.fill(0);
+		parent.fill(255);
 		parent.ellipse(pos.x, pos.y, diameter, diameter);
 
 	}
