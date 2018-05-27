@@ -33,7 +33,7 @@ public class GameLoop {
 				counter++;
 			}
 		}
-		if (counter < 10 && parent.random(1) > 0.98) {
+		if (counter < 30 && parent.random(1) > 0.98) {
 			float rand = parent.random(0, 10);
 			if (rand > 5) {
 				gameObjects.add(new WorldObject(parent, parent.random(parent.width),

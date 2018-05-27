@@ -19,6 +19,7 @@ public class Fx extends GameObject{
 		parent = p;
 		pos = new PVector (_x, _y,-1);
 		type = _type;
+		duration = 50;
 		
 		switch(type) {
 		case "BLOOD": 
@@ -85,6 +86,7 @@ public class Fx extends GameObject{
 		
 		switch(type) {
 		case "BLOOD": 
+			parent.noStroke();
 			parent.rectMode(PConstants.CENTER);
 			parent.fill(200,0,100,PApplet.map(durationCounter, 1000,0,0,255));
 			for(int i = 0; i<number; i++) {
@@ -96,6 +98,7 @@ public class Fx extends GameObject{
 			break;
 			
 		case "SOUND": 
+			parent.noFill();
 			parent.colorMode(PConstants.HSB);
 			parent.stroke(cor,100,100);
 			parent.ellipse(pos.x,pos.y,diameter,diameter);

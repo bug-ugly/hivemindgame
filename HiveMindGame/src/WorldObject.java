@@ -1,6 +1,7 @@
 import ddf.minim.ugens.Oscil;
 import ddf.minim.ugens.Waves;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 //objects that can be picked up
@@ -13,9 +14,16 @@ public class WorldObject extends GameObject {
 	int intervalCounter = 0;
 	int soundCounter = 0;
 	float freq;
-	int OUTER_DIAMETER = 20;
 	String type; 
+	float velocity; //current movement speed
+	float direction; //movement direction
 	
+	float minVelocity;
+	float mainDirection;
+	final float DIRECTION_DECAY = (float)0.01; //speed at which direction is "decaying" back to the main direction
+	final float VELOCITY_DECAY = (float) 0.01; //speed at which movement speed decays
+	final float MAX_VELOCITY = (float) 0.5;  //maximum velocity with which the agent can be moving
+	final float OBJECT_SPEED = (float) 0.1; //normal movement speed of the agent
 	final int SOUND_TIMER = 2; // how long one sound lasts
 	final int FULL_GROWN_TIME = 500; // time at which the object becomes fully grown
 
@@ -24,9 +32,10 @@ public class WorldObject extends GameObject {
 		pos = new PVector(f, g, 0); //when z becomes 1, its fully grown
 		type = _type;
 		out = parent.minim.getLineOut();
-		diameter = OUTER_DIAMETER;
-		
-		
+		diameter = parent.random(15,35);
+		mainDirection = parent.random(0,PConstants.PI*2);
+		direction = mainDirection;
+		minVelocity = PApplet.map(diameter,15,35,(float)0.07,(float)0.01);
 		switch(type) {
 		case "bomb": 
 			freq = 400;
@@ -48,8 +57,14 @@ public class WorldObject extends GameObject {
 
 	void update() {
 		super.update();
-
-		if (pos.z == 1) {
+		if(direction > mainDirection) {
+			direction = direction-DIRECTION_DECAY;
+		}
+		else if(direction < mainDirection) {
+			direction = direction + DIRECTION_DECAY;
+		}
+		
+		if (pos.z == 1) { //when z is one it indicates that the object is fully grown
 			producingSound();
 		}
 
@@ -59,6 +74,33 @@ public class WorldObject extends GameObject {
 		} else {
 			growthTimer++;
 		}
+		
+		if(velocity>minVelocity) {
+		velocity = velocity - VELOCITY_DECAY;
+		}else {
+			velocity = minVelocity;
+		}
+		
+		if(checkCollision() instanceof WorldObject) {
+			
+			direction = PApplet.atan2(checkCollision().pos.y - pos.y, checkCollision().pos.x - pos.x)- PConstants.PI;
+			
+			if(checkCollision().pos.x == pos.x && checkCollision().pos.y == pos.y) {
+				direction = direction - parent.random(PConstants.TWO_PI);
+			}
+			velocity = velocity + OBJECT_SPEED;
+		}
+		if(velocity > MAX_VELOCITY) {
+			velocity = MAX_VELOCITY;
+		}
+		
+		pos.x = PApplet.cos(direction) * velocity + pos.x;
+		pos.y = PApplet.sin(direction) * velocity + pos.y;
+		
+		if(pos.x < 0-diameter || pos.x >parent.width + diameter || pos.y < 0 - diameter || pos.y > parent.height + diameter) {
+			die("OUTOFRANGE");
+		}
+		
 	}
 	
 	public void pickUp(GameObject particle) {
@@ -71,7 +113,6 @@ public class WorldObject extends GameObject {
 			particle.split();
 			break;
 		}
-		
 		
 		die("CONSUMED");
 	}
@@ -118,10 +159,10 @@ public class WorldObject extends GameObject {
 			parent.noStroke();
 			switch(type) {
 			case "bomb":
-				parent.fill(255,0,0);
+				//parent.fill(255,0,0);
 				break; 
 			case "split": 
-				parent.fill(0,0,255);
+				//parent.fill(0,0,255);
 				break;
 			}
 			
@@ -147,6 +188,17 @@ public class WorldObject extends GameObject {
 
 	void stopSound() {
 		wave.unpatch(out);
+	}
+	
+	GameObject checkCollision() {
+		for (GameObject a : parent.game.gameObjects) {
+			if (a != this && a.collidable) {
+				if (PApplet.dist(pos.x, pos.y, a.pos.x, a.pos.y) < diameter / 2 + a.diameter / 2) {
+					return a;
+				}
+			}
+		}
+		return null;
 	}
 
 }
