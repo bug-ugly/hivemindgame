@@ -20,6 +20,7 @@ public class WorldObject extends GameObject {
 	
 	float minVelocity;
 	float mainDirection;
+	
 	final float DIRECTION_DECAY = (float)0.01; //speed at which direction is "decaying" back to the main direction
 	final float VELOCITY_DECAY = (float) 0.01; //speed at which movement speed decays
 	final float MAX_VELOCITY = (float) 0.5;  //maximum velocity with which the agent can be moving
@@ -35,7 +36,7 @@ public class WorldObject extends GameObject {
 		diameter = parent.random(15,35);
 		mainDirection = parent.random(0,PConstants.PI*2);
 		direction = mainDirection;
-		minVelocity = PApplet.map(diameter,15,35,(float)0.07,(float)0.01);
+		minVelocity = PApplet.map(diameter,15,35,(float)0.1,(float)0.05);
 		switch(type) {
 		case "bomb": 
 			freq = 400;

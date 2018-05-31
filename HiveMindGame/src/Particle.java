@@ -2,6 +2,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
+
 public class Particle extends GameObject {
 	Ear ear;
 	NeuralNetwork net;
@@ -24,7 +25,6 @@ public class Particle extends GameObject {
 	
 	
 	
-	boolean following = false;
 
 	Particle(HiveMind p, float x, float y) {
 		parent = p;
@@ -62,7 +62,6 @@ public class Particle extends GameObject {
 		collisionStuff();
 		checkWorldObjects();
 
-		following = false;
 		
 		earFreq = ear.getClosestFrequency();
 		if (earFreq != null) {
@@ -78,6 +77,7 @@ public class Particle extends GameObject {
 		// at player
 		direction = PApplet.atan2(getPlayer().pos.y - pos.y, getPlayer().pos.x - pos.x);
 	
+		//direction = direction + PConstants.PI;
 		// displacement if there is collision with other objects
 		if (checkCollision() != null) {
 			if (checkCollision().pos.x == pos.x && checkCollision().pos.y == pos.y) {
@@ -101,7 +101,7 @@ public class Particle extends GameObject {
 	
 	void checkWorldObjects() {
 		// checking collision with the world objects and calling the resulting behaviour
-		if (checkCollision() instanceof WorldObject && checkCollision().pos.z == 1 && following) {
+		if (checkCollision() instanceof WorldObject && checkCollision().pos.z == 1) {
 			checkCollision().pickUp(this);
 
 		}
@@ -186,7 +186,6 @@ public class Particle extends GameObject {
 			break;
 		case 1:
 			// follow
-			following = true;
 			pos.set((float) (PApplet.cos(angle) * speed + pos.x), (float) (PApplet.sin(angle) * speed + pos.y));
 			break;
 
