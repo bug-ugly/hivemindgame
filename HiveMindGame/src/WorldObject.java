@@ -21,6 +21,8 @@ public class WorldObject extends GameObject {
 	float minVelocity;
 	float mainDirection;
 	
+	boolean inPlayerRange;
+	
 	final float DIRECTION_DECAY = (float)0.01; //speed at which direction is "decaying" back to the main direction
 	final float VELOCITY_DECAY = (float) 0.01; //speed at which movement speed decays
 	final float MAX_VELOCITY = (float) 0.5;  //maximum velocity with which the agent can be moving
@@ -53,7 +55,8 @@ public class WorldObject extends GameObject {
 		wave = new Oscil(freq, 0.5f, Waves.SINE);
 		collidable = true;
 		growthTimer = 0;
-
+		out.mute();
+		inPlayerRange = false;
 	}
 
 	void update() {
@@ -101,6 +104,23 @@ public class WorldObject extends GameObject {
 		if(pos.x < 0-diameter || pos.x >parent.width + diameter || pos.y < 0 - diameter || pos.y > parent.height + diameter) {
 			die("OUTOFRANGE");
 		}
+		
+		
+
+		if ( PLAYER_RANGE > PApplet.dist(pos.x,pos.y, getPlayer().pos.x, getPlayer().pos.y)) {
+				if(out.isMuted()) {
+					out.unmute();
+					
+				}
+				out.setGain(PApplet.map(PApplet.dist(pos.x,pos.y, getPlayer().pos.x, getPlayer().pos.y), 0,PLAYER_RANGE, (float)10.0,(float)-30.0)); 
+				inPlayerRange = true;
+		}
+			
+		else {
+			out.mute(); 
+			inPlayerRange = false;
+		}
+		
 		
 	}
 	
@@ -181,7 +201,7 @@ public class WorldObject extends GameObject {
 		stopSound();
 	}
 	void produceSound() {
-		parent.game.gameObjects.add(new Fx (pos.x,pos.y,"SOUND", parent, this));
+		if(inPlayerRange)parent.game.gameObjects.add(new Fx (pos.x,pos.y,"SOUND", parent, this));
 		wave.unpatch(out);
 		// patch the Oscil to the output
 		wave.patch(out);

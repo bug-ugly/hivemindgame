@@ -5,6 +5,7 @@ import processing.core.PVector;
 //various shared variables of game objects 
 //needed in order to perform update and render cycles
 public class GameObject {
+	
 	AudioOutput out;
 	Oscil wave;
 	HiveMind parent;
@@ -15,6 +16,8 @@ public class GameObject {
 	boolean collidable;
 	boolean triggerNoise = false;
 	boolean soundPlaying = false;
+	
+	final int PLAYER_RANGE = 150;
 
 	public int hearingRange;
 
@@ -31,7 +34,11 @@ public class GameObject {
 	}
 
 	public GameObject getPlayer() {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < parent.game.gameObjects.size(); i++) {
+			if (parent.game.gameObjects.get(i) instanceof Player) {
+				return parent.game.gameObjects.get(i);
+			}
+		}
 		return null;
 	}
 

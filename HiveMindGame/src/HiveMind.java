@@ -21,6 +21,8 @@ public class HiveMind extends PApplet {
 	public float minimum_s_level = (float) 0.09;
 	public boolean rewardsActive = false;
 
+	// add energy to increase the difficulty?
+	
 	public static void main(String[] args) {
 		PApplet.main("HiveMind");
 

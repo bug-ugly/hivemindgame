@@ -75,9 +75,12 @@ public class Particle extends GameObject {
 
 		// default movement direction is towards the player, calculating vector pointing
 		// at player
+		if(PApplet.dist(getPlayer().pos.x,getPlayer().pos.y, pos.x,pos.y) <PLAYER_RANGE) {
 		direction = PApplet.atan2(getPlayer().pos.y - pos.y, getPlayer().pos.x - pos.x);
-	
-		//direction = direction + PConstants.PI;
+		}
+		else {
+		direction = direction + PConstants.PI;
+		}
 		// displacement if there is collision with other objects
 		if (checkCollision() != null) {
 			if (checkCollision().pos.x == pos.x && checkCollision().pos.y == pos.y) {
@@ -152,15 +155,6 @@ public class Particle extends GameObject {
 
 	}
 
-	public GameObject getPlayer() {
-		super.getPlayer();
-		for (int i = 0; i < parent.game.gameObjects.size(); i++) {
-			if (parent.game.gameObjects.get(i) instanceof Player) {
-				return parent.game.gameObjects.get(i);
-			}
-		}
-		return null;
-	}
 
 	void act(float[] output) {
 		

@@ -18,6 +18,8 @@ public class Player extends GameObject {
 	// needs to be many actions (10) for the neural network precision
 	final int INPUT_LENGTH = 513; // the size of the input that the agent receives. the sound spectrum is the
 	// total of 513 numbers
+	
+
 
 	final public float L = (float) 0.001; // learning constant
 

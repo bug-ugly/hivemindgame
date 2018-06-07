@@ -34,14 +34,20 @@ class Ear {
 					pingX = g.pos.x;
 					pingY = g.pos.y;
 					memoryCounter = 1; // activating the counter by setting it higher than 0
+					
 				} else if (PApplet.dist(g.pos.x, g.pos.y, currentObj.pos.x, currentObj.pos.y) < PApplet.dist(pingX,
 						pingY, currentObj.pos.x, currentObj.pos.y)) {
 					pingF = g.wave.frequency.getLastValue();
 					pingX = g.pos.x;
 					pingY = g.pos.y;
 					memoryCounter = 1; // activating the counter by setting it higher than 0
+					
 				}
+				
 			}
+		
+			
+			
 		}
 
 		// counter only counts when set to higher than 0
