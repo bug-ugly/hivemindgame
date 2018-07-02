@@ -8,7 +8,7 @@ public class Particle extends GameObject {
 	NeuralNetwork net;
 	public final int PARTICLE_SIZE = 5; // size of the particle
 	
-	final float MUTATION_CHANCE = (float) 0.99; // actual mutation chance will be 1 - "mutation_chance"
+	final float MUTATION_CHANCE = (float) 0.9; // actual mutation chance will be 1 - "mutation_chance"
 	final float L = (float) 0.001; // learning constant
 	final float PARTICLE_SPEED = 1; // speed of movement
 	final int PARTICLE_HEARING_RANGE = 100; // range at which it will hear ping
@@ -75,7 +75,7 @@ public class Particle extends GameObject {
 
 		// default movement direction is towards the player, calculating vector pointing
 		// at player
-		if(PApplet.dist(getPlayer().pos.x,getPlayer().pos.y, pos.x,pos.y) <PLAYER_RANGE) {
+		if(PApplet.dist(getPlayer().pos.x,getPlayer().pos.y, pos.x,pos.y) < PLAYER_RANGE) {
 		direction = PApplet.atan2(getPlayer().pos.y - pos.y, getPlayer().pos.x - pos.x);
 		}
 		else {

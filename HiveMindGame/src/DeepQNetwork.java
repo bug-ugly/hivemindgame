@@ -69,7 +69,7 @@ public class DeepQNetwork {
 	@SuppressWarnings("unlikely-arg-type")
 	void AddReplay(float reward, float[] NextInput, int NextActionMask[]) {
 		if (ReplayMemory.size() >= ReplayMemoryCapacity)
-			ReplayMemory.remove(parent.random(ReplayMemory.size()));
+			ReplayMemory.remove(parent.random(ReplayMemory.size())); // if there are too many replays, the oldest replay is removed
 		ReplayMemory.add(new Replay(LastInput, LastAction, reward, NextInput, NextActionMask));
 	}
 
@@ -222,57 +222,4 @@ public class DeepQNetwork {
 		TargetDeepQ.setParams(DeepQ);
 	}
 
-	// public boolean SaveNetwork(String ParamFileName , String JSONFileName){
-	// //Write the network parameters:
-	// try(DataOutputStream dos = new
-	// DataOutputStream(Files.newOutputStream(Paths.get(ParamFileName)))){
-	// Nd4j.write(DeepQ.params(),dos);
-	// } catch (IOException e) {
-	// System.out.println("Failed to write params");
-	// return false;
-	// }
-
-	// //Write the network configuration:
-	// try {
-	// FileUtils.write(new File(JSONFileName),
-	// DeepQ.getLayerWiseConfigurations().toJson());
-	// } catch (IOException e) {
-	// System.out.println("Failed to write json");
-	// return false;
-	// }
-	// return true;
-	// }
-
-	// public boolean LoadNetwork(String ParamFileName , String JSONFileName){
-	// //Load network configuration from disk:
-	// MultiLayerConfiguration confFromJson;
-	// try {
-	// confFromJson =
-	// MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new
-	// File(JSONFileName)));
-	// } catch (IOException e1) {
-	// System.out.println("Failed to load json");
-	// return false;
-	// }
-
-	// //Load parameters from disk:
-	// INDArray newParams;
-	// try(DataInputStream dis = new DataInputStream(new
-	// FileInputStream(ParamFileName))){
-	// newParams = Nd4j.read(dis);
-	// } catch (FileNotFoundException e) {
-	// System.out.println("Failed to load parems");
-	// return false;
-	// } catch (IOException e) {
-	// System.out.println("Failed to load parems");
-	// return false;
-	// }
-	// //Create a MultiLayerNetwork from the saved configuration and parameters
-	// DeepQ = new MultiLayerNetwork(confFromJson);
-	// DeepQ.init();
-	// DeepQ.setParameters(newParams);
-	// ReconcileNetworks();
-	// return true;
-
-	// }
 }
